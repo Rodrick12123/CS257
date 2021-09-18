@@ -103,3 +103,5 @@ venv.bak/
 dmypy.json
 # Pyre type checker
 .pyre/
+# To ignore Mac audogen files
+.DS_Store
