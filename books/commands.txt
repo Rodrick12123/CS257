@@ -9,5 +9,8 @@ Synopsis:
   mv [file]... [directory]
   mv [option]... [file]...
  
-
+Name:
+  crf - create file
+ Synopsis:
+  crf [option]... [file]
   
