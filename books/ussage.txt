@@ -1,0 +1,6 @@
+[file] give the exsact name of the file
+
+[options]
+-c [file] copy file
+
+
