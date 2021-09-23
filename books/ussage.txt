@@ -1,6 +1,17 @@
-[file] give the exsact name of the file
+[file] 
+give the exsact name of the file
 
 [options]
 -c [file] copy file
 
+[moving]
+up arrow key - scroll up
+down arrow key - scroll down
+left arrow key - scroll left
+right arrow key - scroll right
+enter - returns results
+shift up arrow key - scroll up a line
+shift down arrow key - scroll down a line
+shift left arrow key - scroll left a line 
+shift right arrow key - scroll right a line
 
