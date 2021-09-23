@@ -1,0 +1,13 @@
+Name:
+  lf - list files
+Synopsis:
+  lf [file]
+
+Name:
+  mv - move
+Synopsis:
+  mv [file]... [directory]
+  mv [option]... [file]...
+ 
+
+  
