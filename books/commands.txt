@@ -2,15 +2,43 @@ Name:
   lf - list files
 Synopsis:
   lf [file]
-
+Description:
+  -t text
+    list text files only
+  -p python
+    list .py files only
+    
 Name:
   mv - move
 Synopsis:
   mv [file]... [directory]
   mv [option]... [file]...
- 
+Desciption:
+  -f force
+    forces a move command
+  -T no target directory
+    does not require a specified directory
+  
 Name:
   crf - create file
  Synopsis:
   crf [option]... [file]
+Description:
+  -t target directory
+    creates file in a specific directory
+  -!d ignore duplicate
+    creates file regardless of duplicate names
+    
+ Name:
+  rm - remove
+ Synopsis:
+  rm [option]... [file]
+  rm [option]... [directory]
+ Description:
+  -S save all
+    saves all files in directory
+  -s save file
+    saves specified file
+  -M moves file
+    moves file to specified location
   
