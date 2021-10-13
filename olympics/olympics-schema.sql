@@ -6,7 +6,7 @@ CREATE TABLE athletes (
     sex text,
     age integer,
     height integer,
-    weight integer
+    weight float
 );
 
 CREATE TABLE events (
@@ -31,6 +31,14 @@ CREATE TABLE noc_regions (
 \copy noc_regions FROM 'noc.csv' DELIMITER ',' CSV NULL AS 'NULL'
 SELECT * FROM noc_regions
 ORDER BY noc_regions.NOC;
+
+\copy athletes FROM 'athlete.csv' DELIMITER ',' CSV NULL AS 'NULL'
+\copy athletes FROM 'athlete.csv' DELIMITER ',' CSV NULL AS 'NULL'
+SELECT athletes.firstname, athletes.lastname
+FROM athletes, events
+WHERE athletes.id = events.athleteid
+AND events.city LIKE 'c'
+ORDER BY lastname;
 
 \copy events FROM 'events.csv' DELIMITER ',' CSV NULL AS 'NULL'
 SELECT * FROM events
