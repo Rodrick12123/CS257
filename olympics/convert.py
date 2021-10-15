@@ -1,4 +1,8 @@
+'''
+conver.py
+Rodrick Lankford
 
+'''
 import csv
 #increments gold medal count in noc.csv by 1
 def add_gold(noc,dic):
