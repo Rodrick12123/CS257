@@ -1,4 +1,6 @@
 #Tables
+#Rodrick Lankford 
+
 CREATE TABLE athletes (
     id integer,
     firstname text,
