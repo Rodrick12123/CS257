@@ -5,7 +5,8 @@ CREATE TABLE athletes (
     id integer,
     firstname text,
     lastname text,
-    sex text
+    sex text,
+    NOC tex
 
 );
 
