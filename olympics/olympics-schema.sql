@@ -6,7 +6,7 @@ CREATE TABLE athletes (
     firstname text,
     lastname text,
     sex text,
-    NOC tex
+    NOC text
 
 );
 
