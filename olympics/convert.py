@@ -44,7 +44,7 @@ def main():
                             if row[14] == 'Gold':
                                 add_gold(row[7], noc_dict)
                             if int(row[0]) == cnt:
-                                csvwriter2.writerow([row[0]] + [first] + [last] + [row[2]])
+                                csvwriter2.writerow([row[0]] + [first] + [last] + [row[2]] + [row[7]])
                                 cnt = cnt + 1                          
                             csvwriter1.writerow([row[0]] + [row[3]] + [row[4]] + [row[5]] + [row[6]] + [row[7]] + [row[8]] + [row[9]]  + [row[10]] + [row[11]] + [row[12]] + [row[13]] + [row[14]])
                            
