@@ -11,10 +11,13 @@ def main():
     parser.add_argument('--password', '-p', type = str)
     parser.add_argument('--database', '-d', type = str)
     parser.add_argument('--user', '-u', type = str)
-    parser.add_argument('--usage', '-?', type = str)
+    parser.add_argument('-?', '--usage', action='store_true')
     parser.add_argument('--NOC', '-n', type = str)
+    parser.add_argument('--gold', '-g', action='store_true')
+    parser.add_argument('--sport', '-s', type = str)
     #why cant I do --help or -h here?
-    #parser.add_argument('--year', '-y', type = int, nargs='+')
+
+
     args = parser.parse_args()
     if args.password:
         password = args.password
@@ -49,6 +52,37 @@ def main():
         try:
             cursor = connection.cursor()
             cursor.execute(query, (args.NOC,))
+        except Exception as e:
+            print(e)
+            exit()
+
+        for row in cursor:
+            print(row[0], row[1], row[2])
+        print()
+    #prints list of NOC regions with their gold medal count in decreasing order
+    if args.gold:
+        query = '''SELECT noc_regions.NOC, noc_regions.gold_medal
+                FROM noc_regions
+                ORDER BY gold_medal DESC'''
+        try:
+            cursor = connection.cursor()
+            cursor.execute(query)
+        except Exception as e:
+            print(e)
+            exit()
+
+        for row in cursor:
+            print(row[0], row[1])
+        print()
+    if args.sport:
+        query = '''SELECT athletes.firstname, athletes.lastname, events.sport
+                FROM athletes, events
+                WHERE athletes.id = events.athleteid
+                AND events.sport like %s'''
+        cap = (args.sport).capitalize()
+        try:
+            cursor = connection.cursor()
+            cursor.execute(query, (cap,))
         except Exception as e:
             print(e)
             exit()
