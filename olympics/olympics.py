@@ -1,12 +1,15 @@
 import psycopg2
 import argparse
 
-# from config import password
-# from config import database
-# from config import user
+'''
+    olympics.py
+    19 October 2021
 
+    Functions implemented by Rodrick Lankford
+'''
 
 def main():
+    #all of the parser arguments available
     parser = argparse.ArgumentParser()
     parser.add_argument('--password', '-p', type = str)
     parser.add_argument('--database', '-d', type = str)
@@ -36,7 +39,7 @@ def main():
         lines = file.readlines()
         for line in lines:
             print(line)
-
+    #try to connect to psycopg2 with given parameters
     try:
         connection = psycopg2.connect(database=database, user=user, password=password)
     except Exception as e:
@@ -74,6 +77,7 @@ def main():
         for row in cursor:
             print(row[0], row[1])
         print()
+    #prints a list of athletes with the sport they played that is the desired search result of the user
     if args.sport:
         query = '''SELECT athletes.firstname, athletes.lastname, events.sport
                 FROM athletes, events
