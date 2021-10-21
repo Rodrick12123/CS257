@@ -14,11 +14,11 @@ def main():
     parser.add_argument('--password', '-p', type = str)
     parser.add_argument('--database', '-d', type = str)
     parser.add_argument('--user', '-u', type = str)
-    parser.add_argument('-?', '--usage', action='store_true')
+    parser.add_argument('-?', '--usage', action='store_true') #why cant I do --help or -h here?
     parser.add_argument('--NOC', '-n', type = str)
     parser.add_argument('--gold', '-g', action='store_true')
     parser.add_argument('--sport', '-s', type = str)
-    #why cant I do --help or -h here?
+    
 
 
     args = parser.parse_args()
