@@ -15,38 +15,41 @@ import json
 import csv
 import psycopg2
 app = flask.Flask(__name__)
+#creates the list of game dictionaries using a query
+def game_gen():
+    game_dict = {}
+    glist =[]
+    years = []
+    try:
+        connection = psycopg2.connect(database="olympics", user="rodrick", password="Lankford1")
+    except Exception as e:
+        print(e)
+        exit()
+    query = '''SELECT events.year, events.season, events.city
+            FROM events'''
 
+    try:
+        cursor = connection.cursor()
+        cursor.execute(query,) #query for the Olympic game year with athletes name, id, sex, event, sport, and meadal
+    except Exception as e:
+        print(e)
+        exit()
+    cnt =1
+    for row in cursor:
+        year = row[0]
+        if year not in years:
+                game_dict = {'id': cnt, 'year': row[0], 'season': row[1] ,'city': row[2]}
+                years.append(year)
+                glist.append(game_dict)
+                cnt = cnt + 1
+    glist.sort(key=operator.itemgetter('year'))
+    connection.close()
+    return glist
 
 @app.route('/games')
 #sends list of dictionaries with Olympics games information from 1896-2016
 def game():
-    game_dict = {}
-    glist =[]
-    years = []
-    with open('event.csv', mode='r') as infile:
-        reader = csv.reader(infile)
-        # for row in reader:  
-        #     index = int(row[0])
-        #     year = int(row[7])
-        #     
-    #         game_dict = {'id': index, 'year': row[7], 'season': row[8] ,'city': row[9]}
-    #         years.append(year)
-    #         glist.append(game_dict)
-        #     glist.sort(key=operator.itemgetter('year'))
-
-        for row in reader:  
-            index = int(row[0])
-            year = int(row[7])
-            if year not in years:
-                game_dict = {'id': index, 'year': row[7], 'season': row[8] ,'city': row[9]}
-                years.append(year)
-                glist.append(game_dict)
-        glist.sort(key=operator.itemgetter('year'))
-        cnt = 1
-        for g in glist:
-            g['id'] = cnt
-            cnt = cnt + 1
-    return json.dumps(glist)
+    return json.dumps(game_gen())
 
 @app.route('/nocs')
 def noc():
@@ -54,6 +57,8 @@ def noc():
     noc_dict = {}
     nlist =[]
     nocs = []
+
+    
     with open('event.csv', mode='r') as infile:
         reader = csv.reader(infile)
         for row in reader:  
@@ -65,32 +70,31 @@ def noc():
         nlist.sort(key=operator.itemgetter('name'))
     return json.dumps(nlist)
 
-#fix this does not work with the git parameter
-@app.route('/medalists/games/<games_id>?[noc=noc_abbreviation]')
+
+@app.route('/medalists/games/<games_id>')
 def medalists(games_id):
     ''' Sends a list of dictonaries the requested games according to the id given 
     and associated Olympic years. If get parameter is inputed the list of dictonaries 
     will be filtered to only have the games with the specified noc's and game id. 
     '''
-    noc = request.args.get('noc')
+    noc = request.args.get('noc', default= '', type=str)
     medalist_dict = {}
     mlist =[]
     check = False
-    if noc is not None: #check if a noc is given
+    if noc != '': #check if a noc is given
         check = True
-        noc.lower()
-    with open('event.csv', mode='r') as infile:
-        reader = csv.reader(infile)
-        for row in reader:  
-            if row[0] == games_id:
-                game = int(row[7]) #saves the year of the inputed games id
-                break
+    glist = game_gen()
+    for item in glist: # checks for games_id based on the list of games in game_gen()
+        if item['id'] == int(games_id):
+            game = item['year']
+            break
+
     try:
         connection = psycopg2.connect(database="olympics", user="rodrick", password="Lankford1")
     except Exception as e:
         print(e)
         exit()
-    query = '''SELECT athletes.firstname, athletes.lastname, athletes.id, athletes.sex, events.sport, events.event, events.medal
+    query = '''SELECT athletes.firstname, athletes.lastname, athletes.id, athletes.sex, events.sport, events.event, events.medal, events.NOC
             FROM athletes, events
             WHERE athletes.id = events.athleteid
             AND events.year = %s'''
@@ -103,20 +107,17 @@ def medalists(games_id):
         exit()
 
     for row in cursor:
-        if check == True:
-            if row[6] != 'NA' and row[5].lower() == noc: #checks to see if the row has a medal and if it has the correct noc
+        if (row[6] != 'NA'):
+            if check == True:
+                if row[-1] == noc:#checks to see if the row has a medal and if it has the correct noc
+                    medalist_dict = {'athlete_id': row[2], 'athlete_name': row[0] + ' ' + row[1], 'athlete_sex': row[3], 'sport': row[4], 'event': row[5], 'medal': row[6]}
+                    mlist.append(medalist_dict)
+            else:
                 medalist_dict = {'athlete_id': row[2], 'athlete_name': row[0] + ' ' + row[1], 'athlete_sex': row[3], 'sport': row[4], 'event': row[5], 'medal': row[6]}
                 mlist.append(medalist_dict)
-        else:
-            if row[6] != 'NA': 
-                medalist_dict = {'athlete_id': row[2], 'athlete_name': row[0] + ' ' + row[1], 'athlete_sex': row[3], 'sport': row[4], 'event': row[5], 'medal': row[6]}
-                mlist.append(medalist_dict)
+    connection.close()
     return json.dumps(mlist)
 
-
-# @app.route('/help')
-# def get_help():
-#     return flask.render_template('help.html')
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser('A sample Flask application/API')
